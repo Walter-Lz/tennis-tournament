@@ -38,12 +38,10 @@ const Container = styled.div`
   height: 100vh;
   font-family: 'Arial', sans-serif;
 `;
-
 const Title = styled.h1`
   font-size: 2rem;
   margin-bottom: 20px;
 `;
-
 const CreateButton = styled.button`
   padding: 10px 20px;
   background-color: #007BFF;
