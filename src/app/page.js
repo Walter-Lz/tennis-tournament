@@ -27,7 +27,7 @@ const Container = styled.div`
   align-items: center;
   height: 100vh;
   background-color: #f7f7f7;
-  font-family: 'Arial', sans-serif;
+  font-family: 'Arial'
 `;
 
 const Title = styled.h1`

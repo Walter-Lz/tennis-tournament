@@ -25,8 +25,8 @@ export default function Layout({ children }) {
               <Bar />
             </MenuIcon>
             <NavLinks $isOpen={isMenuOpen}>
-              <NavItem href="/">Inicio</NavItem>
-              <NavItem href="/Tournament">Torneo</NavItem>
+              <NavItem href="/"onClick={toggleMenu}>Inicio</NavItem>
+              <NavItem href="/Tournament"onClick={toggleMenu}>Torneo</NavItem>
             </NavLinks>
           </Nav>
         </Header>
@@ -39,7 +39,7 @@ export default function Layout({ children }) {
   );
 }
 const Body = styled.body`
-  font-family: Arial, sans-serif;
+  font-family: Arial;
   margin: 0;
   padding: 0;
   background-color: #f7f7f7;
