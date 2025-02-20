@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
+import MatchesDetails from "./MatchesDetails";
 
 const generateTournament = (players) => {
   if (players.length <= 4) return [];  
@@ -44,6 +45,7 @@ const generateTournament = (players) => {
 
 export default function Tournament() {
   const [matches, setMatches] = useState([]);
+  const [selectedMatch, setSelectedMatch] = useState(null);
 
   useEffect(() => {
     const players = ['Jugador 1', 'Jugador 2', 'Jugador 3', 'Jugador 4', 'Jugador 5', 'Jugador 6', 'Jugador 7', 'Jugador 8', 'Jugador 9', 'Jugador 10'];
@@ -64,50 +66,51 @@ const matchesByDate = matches.reduce((acc, match) => {
     return new Intl.DateTimeFormat('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }).format(new Date(date));
   };
 
-return (
-  <div>
-    <h1>Calendario del Torneo</h1>
-    <MatchesContainer>
-      {Object.keys(matchesByDate).map((date, index) => (
-        <MatchColumn key={index}>
-        <MatchDate>{formatDate(date)}</MatchDate>
-        {matchesByDate[date].map((match, matchIndex) => (
-          <MatchCard key={matchIndex}>
-            <MatchVs>{match.player1} vs {match.player2}</MatchVs>
-          </MatchCard>
+  return (
+    <div>
+      <h1>Calendario del Torneo</h1>
+      <MatchesContainer>
+        {Object.keys(matchesByDate).map((date, index) => (
+          <div key={index}>
+            <MatchDate>{formatDate(date)}</MatchDate>
+            {matchesByDate[date].map((match, matchIndex) => (
+              <MatchCard key={matchIndex} onClick = {() => setSelectedMatch(match)}>
+                <MatchVs>{match.player1} vs {match.player2}</MatchVs>
+              </MatchCard>
+            ))}
+          </div>
         ))}
-      </MatchColumn>
-    ))}
-  </MatchesContainer>
-</div>
-);
+      </MatchesContainer>
+      {selectedMatch && <MatchesDetails match={selectedMatch} onClose={() => setSelectedMatch(null)} />}
+    </div>
+  );
 }
 const MatchesContainer = styled.div`
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 16px;
   max-width: 100%;
-  overflow-x: auto;
+  max-height: 80vh; /* Altura máxima para permitir el desplazamiento */
+  overflow-y: auto; /* Desplazamiento vertical */
 `;
-const MatchColumn = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  flex: 1 1 calc(100% / 6); /* Limitar a 6 columnas */
-  max-width: calc(100% / 6);
-`;
+
 const MatchCard = styled.div`
   border: 1px solid #ccc;
   border-radius: 8px;
   padding: 16px;
   text-align: center;
-  width: 200px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-`;
+  cursor: pointer;
+  &:hover {
+    background: #b5ff96;
+  }
+  `;
+
 const MatchDate = styled.div`
   font-weight: bold;
   margin-bottom: 8px;
 `;
+
 const MatchVs = styled.div`
   font-size: 14px;
   color: #555;
