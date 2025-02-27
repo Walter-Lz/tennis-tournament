@@ -87,14 +87,16 @@ const TableWrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  max-width: 100vw; 
+  max-width: 100%; 
   padding: 20px;
   text-align: center;
   align-items: center;
   overflow-x: hidden;
-  margin-left: -20px;
-  margin-top: 20px;
-  margin-bottom: 20px;
+  margin-top: -50px;
+  @media (max-width: 768px) {
+    margin-top: -30px;
+    margin-left: -25px;
+  }
 `;
 const TableContainer = styled.div`
   width: 100%;
@@ -102,13 +104,13 @@ const TableContainer = styled.div`
   overflow-x: auto; 
   display: flex;
   justify-content: center; 
+
 `;
 const Table = styled.table`
   width: 100%;
   min-width: 600px;
   border-collapse: collapse;
-  margin: 0 auto; 
-
+  max-width: 50%;
   @media (max-width: 768px) {
     min-width: 100%;
     font-size: 14px;
@@ -161,6 +163,8 @@ const PaginationButton = styled.button`
   align-items: center;
   justify-content: center;
   font-size: 18px;
+  margin: 0 auto ;
+  margin-top: -15px;
 
   &:disabled {
     background: #e0e0e0;
