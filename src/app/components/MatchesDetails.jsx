@@ -1,8 +1,20 @@
-import React,{useState} from 'react';
+import React,{useState, useEffect} from 'react';
 import styled from 'styled-components';
 
 const MatchesDetails = ({match, onClose}) => {
     const [selectedRound, setSelectedRound] = useState(0);
+//  deshabilitar el desplazamiento vertical cuando el modal está abierto
+  useEffect(() => {
+    if (match) {
+      document.body.style.overflow = 'hidden'; // Deshabilita el desplazamiento vertical
+    }else {
+      document.body.style.overflow = 'auto'; // Restaura el desplazamiento vertical
+    }
+    // Limpieza: Restaura el desplazamiento vertical cuando el componente se desmonta
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+    }, [match]);
     if (!match) return null;
     return (
         <ModalOverlay>
@@ -85,22 +97,20 @@ const RoundSelector = styled.div`
     display: flex;
     gap: 8px;
     margin-bottom: 32px;
-    overflow-x: auto;
+    overflow-x: scroll;
     white-space: nowrap;
     padding: 8px;
     max-width: 100%;
-
-    -webkit-overflow-scrolling: touch;
+    touch-action: pan-x; /* Desplazamiento horizontal en dispositivos táctiles */
+    -webkit-overflow-scrolling: touch; /* Desplazamiento suave en iOS */
+    
     &::-webkit-scrollbar {
         height: 7px; 
-        display: block;
     }
-    
     &::-webkit-scrollbar-track {
         background: #f0f0f0; /* Color de fondo de la barra */
         border-radius: 4px;
     }
-
     &::-webkit-scrollbar-thumb {
         background: #007bff !important; /* Color de la barra */
         border-radius: 4px;
@@ -109,7 +119,7 @@ const RoundSelector = styled.div`
     /* Cambia el color cuando el usuario presiona la barra */
     &::-webkit-scrollbar-thumb:active {
         background: rgb(255, 0, 0) !important;
-    }
+    } 
 `;
 const RoundButton = styled.button.attrs(({ isSelected }) => ({
     'aria-pressed': isSelected, // Accesibilidad mejorada

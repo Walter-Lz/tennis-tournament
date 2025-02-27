@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
 import MatchesDetails from "./MatchesDetails";
+import TournamentBoard from "./TournamentBoard";
 
-const generateTournament = (players) => {
+const GenerateTournament = (players) => {
   if (players.length <= 4) return [];  
   const scheduledMatches = [];
   const tournamentPlayers = players.slice(4); // Excluir los primeros 4
@@ -46,10 +47,11 @@ const generateTournament = (players) => {
 export default function Tournament() {
   const [matches, setMatches] = useState([]);
   const [selectedMatch, setSelectedMatch] = useState(null);
+  const [view, setView] = useState('calendar'); // estado para controlar la vista
 
   useEffect(() => {
     const players = ['Jugador 1', 'Jugador 2', 'Jugador 3', 'Jugador 4', 'Jugador 5', 'Jugador 6', 'Jugador 7', 'Jugador 8', 'Jugador 9', 'Jugador 10'];
-    setMatches(generateTournament(players));
+    setMatches(GenerateTournament(players));
   }, []);
 
 // Agrupar partidos por fecha
@@ -68,23 +70,49 @@ const matchesByDate = matches.reduce((acc, match) => {
 
   return (
     <div>
-      <h1>Calendario del Torneo</h1>
-      <MatchesContainer>
-        {Object.keys(matchesByDate).map((date, index) => (
-          <div key={index}>
-            <MatchDate>{formatDate(date)}</MatchDate>
-            {matchesByDate[date].map((match, matchIndex) => (
-              <MatchCard key={matchIndex} onClick = {() => setSelectedMatch(match)}>
-                <MatchVs>{match.player1} vs {match.player2}</MatchVs>
-              </MatchCard>
-            ))}
-          </div>
-        ))}
-      </MatchesContainer>
+      <h1>Torneo Movistar 2025</h1>
+      <TabSelector>
+        <Tab onClick={() => setView('calendar')} active={view === 'calendar' ? 'true' : 'false'}>Calendario</Tab>
+        <Tab onClick={() => setView('board')} active={view === 'board' ? 'true' : 'false'}>Tablero</Tab>
+      </TabSelector>
+      {view === 'calendar' ? (
+        <MatchesContainer>
+          {Object.keys(matchesByDate).map((date, index) => (
+            <div key={index}>
+              <MatchDate>{formatDate(date)}</MatchDate>
+              {matchesByDate[date].map((match, matchIndex) => (
+                <MatchCard key={matchIndex} onClick={() => setSelectedMatch(match)}>
+                  <MatchVs>{match.player1} vs {match.player2}</MatchVs>
+                </MatchCard>
+              ))}
+            </div>
+          ))}
+        </MatchesContainer>
+      ) : (
+        <TournamentBoard />
+      )}
       {selectedMatch && <MatchesDetails match={selectedMatch} onClose={() => setSelectedMatch(null)} />}
     </div>
   );
 }
+const TabSelector = styled.div`
+  display: flex;
+  margin-bottom: 16px;
+  border-bottom: 2px solid #ccc;
+`;
+
+const Tab = styled.div`
+  flex: 1;
+  padding: 8px 16px;
+  cursor: pointer;
+  text-align: center;
+  border-bottom: ${props => (props.active === 'true' ? '2px solid #007bff' : 'none')};
+  color: ${props => (props.active === 'true' ? '#007bff' : '#555')};
+  &:hover {
+    color:rgb(83, 179, 71);
+  }
+`;
+
 const MatchesContainer = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -95,12 +123,13 @@ const MatchesContainer = styled.div`
 `;
 
 const MatchCard = styled.div`
-  border: 1px solid #ccc;
+  border: 2px solid #ccc;
   border-radius: 8px;
   padding: 16px;
   text-align: center;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   cursor: pointer;
+  margin-bottom: 4px;
   &:hover {
     background: #b5ff96;
   }
